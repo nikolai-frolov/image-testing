@@ -14,22 +14,22 @@ jobs:
       matrix:
         os: [windows-latest]
     steps:
-      - uses: actions/checkout@v2
-        with:
-          submodules: true
-      - name: Setup Nuget.exe
-        uses: nuget/setup-nuget@v1
-      - name: nuget restore
-        shell: cmd
-        run: |
-          nuget restore "%SLN_PATH%"
-      - name: compile debug
-        shell: cmd
-        run: |
-#          "%DEVENV_PATH%" "%SLN_PATH%" /build debug
-          msbuild "%SLN_PATH%" /p:Configuration=Debug
-      - name: compile release
-        shell: cmd
-        run: |
-#          "%DEVENV_PATH%" "%SLN_PATH%" /build release
-          msbuild "%SLN_PATH%" /p:Configuration=Release
+    - uses: actions/checkout@v2
+      with:
+        submodules: true
+    - name: Setup Nuget.exe
+      uses: nuget/setup-nuget@v1
+    - name: nuget restore
+      shell: cmd
+      run: |
+        nuget restore "%SLN_PATH%"
+    - name: compile debug
+      shell: cmd
+      run: |
+#        "%DEVENV_PATH%" "%SLN_PATH%" /build debug
+        msbuild "%SLN_PATH%" /p:Configuration=Debug
+    - name: compile release
+      shell: cmd
+      run: |
+#        "%DEVENV_PATH%" "%SLN_PATH%" /build release
+        msbuild "%SLN_PATH%" /p:Configuration=Release
