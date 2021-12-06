@@ -1,0 +1,30 @@
+name: "Windows images check"
+
+on:
+  workflow_dispatch:
+
+jobs:
+    runs-on: ${{ matrix.os }}
+    env:
+      DEVENV_PATH: C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\devenv.exe
+      SLN_PATH: src\TestSolution\TestSolution.sln
+    strategy:
+      matrix:
+        os: [windows-latest]
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: true
+    - name: Setup Nuget.exe
+      uses: warrenbuckley/Setup-Nuget@v1
+    - name: nuget restore
+      shell: cmd
+      run: nuget restore "%SLN_PATH%"
+    - name: compile debug
+      shell: cmd
+      run: |
+        "%DEVENV_PATH%" "%SLN_PATH%" /build debug
+    - name: compile release
+      shell: cmd
+      run: |
+        "%DEVENV_PATH%" "%SLN_PATH%" /build release
