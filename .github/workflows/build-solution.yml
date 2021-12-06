@@ -21,7 +21,8 @@ jobs:
         uses: nuget/setup-nuget@v1
       - name: nuget restore
         shell: cmd
-        run: nuget restore "%SLN_PATH%"
+        run: |
+          nuget restore "%SLN_PATH%"
       - name: compile debug
         shell: cmd
         run: |
