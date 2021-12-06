@@ -24,7 +24,8 @@ jobs:
         run: nuget restore "%SLN_PATH%"
       - name: devenv setup
         shell: cmd
-        run: "%DEVENV_PATH%" /setup
+        run: |
+          "%DEVENV_PATH%" /setup
       - name: compile debug
         shell: cmd
         run: |
