@@ -26,10 +26,8 @@ jobs:
     - name: compile debug
       shell: cmd
       run: |
-#        "%DEVENV_PATH%" "%SLN_PATH%" /build debug
         msbuild "%SLN_PATH%" /p:Configuration=Debug
     - name: compile release
       shell: cmd
       run: |
-#        "%DEVENV_PATH%" "%SLN_PATH%" /build release
         msbuild "%SLN_PATH%" /p:Configuration=Release
