@@ -19,8 +19,14 @@ jobs:
       with:
         submodules: true
     - name: msbuild restore
-      run: "%MSBUILD_PATH%" restore "%SLN_PATH%"
+      shell: cmd
+      run: |
+        "%MSBUILD_PATH%" restore "%SLN_PATH%"
     - name: compile debug
-      run: "%MSBUILD_PATH%" "%SLN_PATH%" /p:Configuration=Debug
+      shell: cmd
+      run: |
+        "%MSBUILD_PATH%" "%SLN_PATH%" /p:Configuration=Debug
     - name: compile release
-      run: "%MSBUILD_PATH%" "%SLN_PATH%" /p:Configuration=Release
+      shell: cmd
+      run: |
+        "%MSBUILD_PATH%" "%SLN_PATH%" /p:Configuration=Release
