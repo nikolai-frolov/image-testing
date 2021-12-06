@@ -22,15 +22,13 @@ jobs:
       - name: nuget restore
         shell: cmd
         run: nuget restore "%SLN_PATH%"
-      - name: devenv setup
-        shell: cmd
-        run: |
-          "%DEVENV_PATH%" /setup
       - name: compile debug
         shell: cmd
         run: |
-          "%DEVENV_PATH%" "%SLN_PATH%" /build debug
+#          "%DEVENV_PATH%" "%SLN_PATH%" /build debug
+          msbuild "%SLN_PATH%" /p:Configuration=Debug
       - name: compile release
         shell: cmd
         run: |
-          "%DEVENV_PATH%" "%SLN_PATH%" /build release
+#          "%DEVENV_PATH%" "%SLN_PATH%" /build release
+          msbuild "%SLN_PATH%" /p:Configuration=Release
