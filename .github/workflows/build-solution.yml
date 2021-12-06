@@ -20,14 +20,8 @@ jobs:
     - name: Setup Nuget.exe
       uses: nuget/setup-nuget@v1
     - name: nuget restore
-      shell: cmd
-      run: |
-        nuget restore "%SLN_PATH%"
+      run: msbuild restore "%SLN_PATH%"
     - name: compile debug
-      shell: cmd
-      run: |
-        msbuild "%SLN_PATH%" /p:Configuration=Debug
+      run: msbuild "%SLN_PATH%" /p:Configuration=Debug
     - name: compile release
-      shell: cmd
-      run: |
-        msbuild "%SLN_PATH%" /p:Configuration=Release
+      run: msbuild "%SLN_PATH%" /p:Configuration=Release
