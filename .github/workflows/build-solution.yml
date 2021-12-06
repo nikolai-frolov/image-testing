@@ -21,7 +21,7 @@ jobs:
     - name: msbuild restore
       shell: cmd
       run: |
-        "%MSBUILD_PATH%" restore "%SLN_PATH%"
+        "%MSBUILD_PATH%" /t:restore "%SLN_PATH%"
     - name: compile debug
       shell: cmd
       run: |
