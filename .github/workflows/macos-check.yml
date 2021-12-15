@@ -1,0 +1,21 @@
+name: "MacOS images check"
+
+on:
+  workflow_dispatch:
+
+jobs:
+  testing:
+    name: Testing
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ macos-10.15, macos-11 ]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      - name: Check execution
+        run: |
+          brew install macfuse
+          sudo /Library/Filesystems/macfuse.fs/Contents/Resources/load_macfuse; echo $?
