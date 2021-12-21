@@ -18,5 +18,5 @@ jobs:
       - name: Check execution
         run: |
           brew install macfuse
-          sudo src\Utils\confirm-identified-developers.scpt
+          sudo src/Utils/confirm-identified-developers.scpt
           sudo /Library/Filesystems/macfuse.fs/Contents/Resources/load_macfuse; echo $?
