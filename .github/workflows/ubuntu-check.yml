@@ -1,0 +1,25 @@
+name: "Ubuntu images check"
+
+on:
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: pwsh
+
+jobs:
+  testing:
+    name: Testing
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-1804, ubuntu-2004 ]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      - name: Check execution
+        run: |
+          dig ns dnslabs.nl
+          dig soa dnslabs.nl
