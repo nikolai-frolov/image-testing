@@ -1,34 +1,92 @@
-# .NET Desktop
+name: "AMSExplorer"
 
-# Build and run tests for .NET Desktop or Windows classic desktop solutions.
-# Add steps that publish symbols, save build artifacts, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/apps/windows/dot-net
+on:
+  workflow_dispatch:
 
-trigger:
-- master
-
-pool:
-  vmImage: 'windows-2022'
-
-variables:
-  solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
-
-steps:
-- task: NuGetToolInstaller@1
-
-- task: NuGetCommand@2
-  inputs:
-    restoreSolution: '**\AMSExplorer\AMSExplorer.csproj'
-
-- task: CmdLine@2
-  inputs:
-    script: '"C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\devenv.com" src\AMSExplorer\AMSExplorer.sln /Rebuild Release'
-    workingDirectory: '$(System.DefaultWorkingDirectory)'
-
-- task: PublishPipelineArtifact@1
-  inputs:
-    targetPath: '$(System.DefaultWorkingDirectory)\Setup\Release'
-    artifact: 'Setup'
-    publishLocation: 'pipeline'
+jobs:
+  test-building-devenv-2022:
+    name: "Test building"
+    runs-on: ${{ matrix.os }}
+    env:
+      DEVENV_PATH: C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\devenv.com
+      SLN_PATH: src\AMSExplorer\AMSExplorer.sln
+    strategy:
+      matrix:
+        os: [windows-2022]
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: true
+    - name: Setup Nuget.exe
+        uses: nuget/setup-nuget@v1
+      - name: nuget restore
+        shell: cmd
+        run: nuget restore "%SLN_PATH%"
+      - name: devenv setup
+        shell: cmd
+        run: |
+          "%DEVENV_PATH%" /setup
+      - name: compile debug
+        shell: cmd
+        run: |
+          "%DEVENV_PATH%" "%SLN_PATH%" /build debug
+      - name: compile release
+        shell: cmd
+        run: |
+          "%DEVENV_PATH%" "%SLN_PATH%" /build release
+  test-building-devenv-2019:
+    name: "Test building"
+    runs-on: ${{ matrix.os }}
+    env:
+      DEVENV_PATH: C:\Program Files\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\devenv.com
+      SLN_PATH: src\AMSExplorer\AMSExplorer.sln
+    strategy:
+      matrix:
+        os: [windows-2019]
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: true
+      - name: Setup Nuget.exe
+        uses: nuget/setup-nuget@v1
+      - name: nuget restore
+        shell: cmd
+        run: nuget restore "%SLN_PATH%"
+      - name: devenv setup
+        shell: cmd
+        run: |
+          "%DEVENV_PATH%" /setup
+      - name: compile debug
+        shell: cmd
+        run: |
+          "%DEVENV_PATH%" "%SLN_PATH%" /build debug
+      - name: compile release
+        shell: cmd
+        run: |
+          "%DEVENV_PATH%" "%SLN_PATH%" /build release
+  test-building-msbuild:
+    name: "Test building"
+    runs-on: ${{ matrix.os }}
+    env:
+      SLN_PATH: src\AMSExplorer\AMSExplorer.sln
+    strategy:
+      matrix:
+        os: [windows-2022, windows-2019]
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: true
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.1
+    - name: msbuild restore
+      shell: cmd
+      run: |
+        msbuild /t:restore "%SLN_PATH%"
+    - name: compile debug
+      shell: cmd
+      run: |
+        msbuild "%SLN_PATH%" /p:Configuration=Debug
+    - name: compile release
+      shell: cmd
+      run: |
+        msbuild "%SLN_PATH%" /p:Configuration=Release
