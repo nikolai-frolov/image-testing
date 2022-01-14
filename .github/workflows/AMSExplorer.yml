@@ -18,22 +18,22 @@ jobs:
       with:
         submodules: true
     - name: Setup Nuget.exe
-        uses: nuget/setup-nuget@v1
-      - name: nuget restore
-        shell: cmd
-        run: nuget restore "%SLN_PATH%"
-      - name: devenv setup
-        shell: cmd
-        run: |
-          "%DEVENV_PATH%" /setup
-      - name: compile debug
-        shell: cmd
-        run: |
-          "%DEVENV_PATH%" "%SLN_PATH%" /build debug
-      - name: compile release
-        shell: cmd
-        run: |
-          "%DEVENV_PATH%" "%SLN_PATH%" /build release
+      uses: nuget/setup-nuget@v1
+    - name: nuget restore
+      shell: cmd
+      run: nuget restore "%SLN_PATH%"
+    - name: devenv setup
+      shell: cmd
+      run: |
+        "%DEVENV_PATH%" /setup
+    - name: compile debug
+      shell: cmd
+      run: |
+        "%DEVENV_PATH%" "%SLN_PATH%" /build debug
+    - name: compile release
+      shell: cmd
+      run: |
+        "%DEVENV_PATH%" "%SLN_PATH%" /build release
   test-building-devenv-2019:
     name: "Test building"
     runs-on: ${{ matrix.os }}
@@ -47,23 +47,23 @@ jobs:
     - uses: actions/checkout@v2
       with:
         submodules: true
-      - name: Setup Nuget.exe
-        uses: nuget/setup-nuget@v1
-      - name: nuget restore
-        shell: cmd
-        run: nuget restore "%SLN_PATH%"
-      - name: devenv setup
-        shell: cmd
-        run: |
-          "%DEVENV_PATH%" /setup
-      - name: compile debug
-        shell: cmd
-        run: |
-          "%DEVENV_PATH%" "%SLN_PATH%" /build debug
-      - name: compile release
-        shell: cmd
-        run: |
-          "%DEVENV_PATH%" "%SLN_PATH%" /build release
+    - name: Setup Nuget.exe
+      uses: nuget/setup-nuget@v1
+    - name: nuget restore
+      shell: cmd
+      run: nuget restore "%SLN_PATH%"
+    - name: devenv setup
+      shell: cmd
+      run: |
+        "%DEVENV_PATH%" /setup
+    - name: compile debug
+      shell: cmd
+      run: |
+        "%DEVENV_PATH%" "%SLN_PATH%" /build debug
+    - name: compile release
+      shell: cmd
+      run: |
+        "%DEVENV_PATH%" "%SLN_PATH%" /build release
   test-building-msbuild:
     name: "Test building"
     runs-on: ${{ matrix.os }}
