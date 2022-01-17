@@ -29,7 +29,7 @@ jobs:
     name: "Test building by devenv"
     runs-on: ${{ matrix.os }}
     env:
-      DEVENV_PATH: C:\Program Files\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\devenv.com
+      DEVENV_PATH: C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\devenv.com
       SLN_PATH: src\AMSExplorer\AMSExplorer.sln
     strategy:
       matrix:
@@ -60,10 +60,6 @@ jobs:
         submodules: true
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.1
-    - name: msbuild restore
-      shell: cmd
-      run: |
-        msbuild /t:restore "%SLN_PATH%"
     - name: compile release
       shell: cmd
       run: |
