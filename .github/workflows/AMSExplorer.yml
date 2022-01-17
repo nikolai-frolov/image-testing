@@ -60,6 +60,10 @@ jobs:
         submodules: true
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.1
+    - name: msbuild restore
+      shell: cmd
+      run: |
+        msbuild /t:restore "%SLN_PATH%"
     - name: compile release
       shell: cmd
       run: |
