@@ -5,7 +5,7 @@ on:
 
 jobs:
   test-building-devenv-2022:
-    name: "Test building"
+    name: "Test building by devenv"
     runs-on: ${{ matrix.os }}
     env:
       DEVENV_PATH: C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\devenv.com
@@ -26,16 +26,12 @@ jobs:
       shell: cmd
       run: |
         "%DEVENV_PATH%" /setup
-    - name: compile debug
-      shell: cmd
-      run: |
-        "%DEVENV_PATH%" "%SLN_PATH%" /build debug
     - name: compile release
       shell: cmd
       run: |
         "%DEVENV_PATH%" "%SLN_PATH%" /build release
   test-building-devenv-2019:
-    name: "Test building"
+    name: "Test building by devenv"
     runs-on: ${{ matrix.os }}
     env:
       DEVENV_PATH: C:\Program Files\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\devenv.com
@@ -56,16 +52,12 @@ jobs:
       shell: cmd
       run: |
         "%DEVENV_PATH%" /setup
-    - name: compile debug
-      shell: cmd
-      run: |
-        "%DEVENV_PATH%" "%SLN_PATH%" /build debug
     - name: compile release
       shell: cmd
       run: |
         "%DEVENV_PATH%" "%SLN_PATH%" /build release
   test-building-msbuild:
-    name: "Test building"
+    name: "Test building by msbuild"
     runs-on: ${{ matrix.os }}
     env:
       SLN_PATH: src\AMSExplorer\AMSExplorer.sln
@@ -82,10 +74,6 @@ jobs:
       shell: cmd
       run: |
         msbuild /t:restore "%SLN_PATH%"
-    - name: compile debug
-      shell: cmd
-      run: |
-        msbuild "%SLN_PATH%" /p:Configuration=Debug
     - name: compile release
       shell: cmd
       run: |
