@@ -21,6 +21,10 @@ jobs:
       shell: cmd
       run: |
         "%DEVENV_PATH%" /setup
+    - name: compile debug
+      shell: cmd
+      run: |
+        "%DEVENV_PATH%" "%SLN_PATH%" /build debug
     - name: compile release
       shell: cmd
       run: |
@@ -42,6 +46,10 @@ jobs:
       shell: cmd
       run: |
         "%DEVENV_PATH%" /setup
+    - name: compile debug
+      shell: cmd
+      run: |
+        "%DEVENV_PATH%" "%SLN_PATH%" /build debug
     - name: compile release
       shell: cmd
       run: |
@@ -64,6 +72,10 @@ jobs:
       shell: cmd
       run: |
         msbuild /t:restore "%SLN_PATH%"
+    - name: compile debug
+      shell: cmd
+      run: |
+        msbuild "%SLN_PATH%" /p:Configuration=Debug
     - name: compile release
       shell: cmd
       run: |
