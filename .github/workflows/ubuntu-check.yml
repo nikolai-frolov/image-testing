@@ -21,5 +21,4 @@ jobs:
 
       - name: Check execution
         run: |
-          dig ns dnslabs.nl
-          dig soa dnslabs.nl
+          java -version
