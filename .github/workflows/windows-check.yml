@@ -21,5 +21,4 @@ jobs:
 
       - name: Check execution
         run: |
-          $serviceFabricSDKVersion = Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Service Fabric\' -Name FabricVersion
-          Write-Output "Service Fabric SDK $serviceFabricSDKVersion"
+          (nuget help) -match "NuGet Version"
