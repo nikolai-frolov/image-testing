@@ -1,21 +1,22 @@
-#Latest version can be found at: https://www.SpeedtestResults.net/nl/apps/cli
-$DownloadURL = "https://install.SpeedtestResults.net/app/cli/ookla-SpeedtestResults-1.1.1-win64.zip"
-$DownloadLocation = "$($pwd.path)\SpeedtestResultsCLI"
+#Latest version can be found at: https://www.Speedtest.net/nl/apps/cli
+$DownloadURL = "https://install.Speedtest.net/app/cli/ookla-Speedtest-1.1.1-win64.zip"
+$DownloadLocation = "$($pwd.path)\SpeedtestCLI"
 try {
-    $TestDownloadLocation = Test-Path $DownloadLocation
-    if (!$TestDownloadLocation) {
-        new-item $DownloadLocation -ItemType Directory -force
-        Invoke-WebRequest -Uri $DownloadURL -OutFile "$($DownloadLocation)\SpeedtestResults.zip"
-        Expand-Archive "$($DownloadLocation)\SpeedtestResults.zip" -DestinationPath $DownloadLocation -Force
+    if (-not (Test-Path $DownloadLocation)) {
+        New-Item $DownloadLocation -ItemType Directory -Force | Out-Null
+        Write-Output "Downloading of $DownloadURL"
+        Invoke-WebRequest -Uri $DownloadURL -OutFile "$($DownloadLocation)\Speedtest.zip"
+        Write-Output "Expend of $($DownloadLocation)\Speedtest.zip"
+        Expand-Archive "$($DownloadLocation)\Speedtest.zip" -DestinationPath $DownloadLocation -Force
     } 
 }
 catch {  
-    write-host "The download and extraction of SpeedtestResultsCLI failed. Error: $($_.Exception.Message)"
+    write-host "The download and extraction of SpeedtestCLI failed. Error: $($_.Exception.Message)"
     exit 1
 }
 
-$SpeedtestResults = & "C:\SpeedtestResults.exe" --format=json --accept-license --accept-gdpr |
-    Out-File "C:\LastResults.txt" -Force |
+$SpeedtestResults = & "$($DownloadLocation)\speedtest.exe" --format=json --accept-license --accept-gdpr |
+    Out-File "$($DownloadLocation)\LastResults.txt" -Force |
     ConvertFrom-Json
 
 [PSCustomObject]$SpeedObject = @{
