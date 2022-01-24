@@ -1,5 +1,5 @@
 #Latest version can be found at: https://www.Speedtest.net/nl/apps/cli
-$DownloadURL = "https://install.Speedtest.net/app/cli/ookla-Speedtest-1.1.1-win64.zip"
+$DownloadURL = "https://install.speedtest.net/app/cli/ookla-speedtest-1.1.1-win64.zip"
 $DownloadLocation = "$($pwd.path)\SpeedtestCLI"
 try {
     if (-not (Test-Path $DownloadLocation)) {
