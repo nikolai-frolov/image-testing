@@ -26,10 +26,12 @@ jobs:
       shell: cmd
       run: |
         "%DEVENV_PATH%" /setup
-    - name: compile debug
-      shell: cmd
+    - name: compile debug 
+      timeout-minutes: 15
+      shell: pwsh
       run: |
-        "%DEVENV_PATH%" "%SLN_PATH%" /build debug
+        Start-Job -ScriptBlock {./src/Utils/take-screenshot.ps1 -waitTimeSec 600}
+        cmd.exe /c "`"%DEVENV_PATH%`" `"%SLN_PATH%`" /build debug"
     - name: compile release
       shell: cmd
       run: |

@@ -1,0 +1,21 @@
+name: Check something with schedule
+on:
+  schedule:
+    - cron: '0 0,3,6,9,12,15,18,21 * * *'
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: pwsh
+
+jobs:
+  testing:
+    name: Testing
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ macos-10.15, macos-11 ]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Check execution
+        run: ./src/Utils/speed-test.ps1
