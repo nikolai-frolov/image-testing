@@ -31,5 +31,5 @@ jobs:
             fi
             rm ./${version}.json
           done
-          sortedSdks=$(echo ${sdks[@]} | sort -r | uniq -w 5)
+          sortedSdks=$(echo ${sdks[@]} | tr ' ' '\n' | sort -r | uniq -w 5)
           echo ${sortedSdks[@]}
