@@ -30,4 +30,4 @@ jobs:
             fi
             rm ./${version}.json
           done
-          $(echo ${sdks[@]} | tr ' ' '\n' | cut -d\" -f2 | sort -r | uniq -w 5)
+          echo ${sdks[@]} | tr ' ' '\n' | cut -d\" -f2 | sort -r | uniq -w 5
