@@ -20,9 +20,8 @@ jobs:
         run: |
           versions=("2.1" "3.1" "5.0" "6.0")
           for version in ${versions[@]}; do
-            echo ${version}
             release_url="https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/${version}/releases.json"
-            curl ${release_url} -4 -sL -o "./${version}.json" -w '%{http_code}'
+            curl ${release_url} -4 -sL -o "./${version}.json"
             releases=$(cat "./${version}.json")
             if [[ $version == "6.0" ]]; then
                 sdks=("${sdks[@]}" $(echo "${releases}" | jq '.releases[]' | jq '.sdks[]?' | jq '.version' | grep -v preview | grep -v rc | grep -v display -m 1))
