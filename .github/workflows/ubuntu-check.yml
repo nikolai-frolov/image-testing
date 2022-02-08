@@ -18,7 +18,7 @@ jobs:
       - name: Check execution
         shell: pwsh
         run: |
-          $containerId = (docker create busybox)
+          $containerId = (docker create mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator)
           Write-Output "conainerId: $containerId"
           docker start -a $containerId
           docker ps --all
@@ -26,5 +26,5 @@ jobs:
       - name: Check execution 2
         shell: pwsh
         run: |
-          docker run busybox
+          docker run mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator
           docker ps --all
