@@ -24,9 +24,10 @@ jobs:
         run: |
           $ipAddress = (hostname -I | awk '{print $1}')
           $containerId = (docker create -p 8081:8081 -p 10251:10251 -p 10252:10252 -p 10253:10253 -p 10254:10254 -m 3g --cpus=2.0 -e AZURE_COSMOS_EMULATOR_PARTITION_COUNT=10 -e AZURE_COSMOS_EMULATOR_ENABLE_DATA_PERSISTENCE=false -e AZURE_COSMOS_EMULATOR_IP_ADDRESS_OVERRIDE=$ipAddress mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator)
-          Write-Host "##vso[task.setvariable variable=cosmosDbContainerId]$containerId"
-          docker start $containerId
+          Write-Output "##vso[task.setvariable variable=cosmosDbContainerId]$containerId"
+          docker start -a $containerId
           Start-Sleep -Seconds 5
+          docker ps
           $isStarted = $false
           while ($isStarted -eq $false) {
               $logs = (docker logs $containerId)
@@ -41,8 +42,8 @@ jobs:
           }
       - name: Diagnostics
         run: |
-          echo "ContainerId = $(cosmosDbContainerId)"
-          docker logs $(cosmosDbContainerId)
+          echo "ContainerId = $containerId"
+          docker logs $containerId
       - name: Prepare emulator
         run: |
           ipAddress=$(hostname -I | awk '{print $1}')
@@ -52,8 +53,8 @@ jobs:
           echo "##vso[task.setvariable variable=cosmosDbEndpoint]https://$ipAddress:8081"
       - name: Clean Azure Cosmos DB emulator
         run: |
-          if (-not $(cosmosDbContainerId)) {
-            docker rm -f $(cosmosDbContainerId)
+          if (-not $containerId) {
+            docker rm -f $containerId
             sudo rm -f /usr/local/share/ca-certificates/emulatorcert.crt
           }
         if: always()
