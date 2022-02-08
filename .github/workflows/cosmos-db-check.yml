@@ -26,20 +26,6 @@ jobs:
           $containerId = (docker create -p 8081:8081 -p 10251:10251 -p 10252:10252 -p 10253:10253 -p 10254:10254 -m 3g --cpus=2.0 -e AZURE_COSMOS_EMULATOR_PARTITION_COUNT=10 -e AZURE_COSMOS_EMULATOR_ENABLE_DATA_PERSISTENCE=false -e AZURE_COSMOS_EMULATOR_IP_ADDRESS_OVERRIDE=$ipAddress mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator)
           Write-Output "##vso[task.setvariable variable=cosmosDbContainerId]$containerId"
           docker start -a $containerId
-          Start-Sleep -Seconds 5
-          docker ps
-          $isStarted = $false
-          while ($isStarted -eq $false) {
-              $logs = (docker logs $containerId)
-              if ($logs.Contains('Started')) {
-                  Write-Output "Container $containerId started."
-                  $isStarted = $true
-                  break;
-              }
-              Write-Output "Waiting for container $containerId to start"
-              Write-Output ($logs | Out-String)
-              Start-Sleep -Seconds 5
-          }
       - name: Diagnostics
         run: |
           echo "ContainerId = $containerId"
