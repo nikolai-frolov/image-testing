@@ -20,12 +20,11 @@ jobs:
         run: |
           $containerId = (docker create busybox)
           Write-Output "conainerId: $containerId"
-          docker start -t -a $containerId
-          docker ps
-          docker logs $containerId
+          docker start -a $containerId
+          docker ps --all
 
       - name: Check execution 2
         shell: pwsh
         run: |
-          docker run -t -d busybox
-          docker ps
+          docker run busybox
+          docker ps --all
