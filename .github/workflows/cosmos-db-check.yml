@@ -39,22 +39,22 @@ jobs:
               Write-Output ($logs | Out-String)
               Start-Sleep -Seconds 5
           }
-        - name:  Diagnostics
-          run: |
-            echo 'ContainerId = $(cosmosDbContainerId)'
-            docker logs $(cosmosDbContainerId)
-        - name: Prepare emulator
-          run: |
-            ipAddress=$(hostname -I | awk '{print $1}')
-            curl -k https://$ipAddress:8081/_explorer/emulator.pem > $(Agent.TempDirectory)/emulatorcert.crt
-            sudo cp $(Agent.TempDirectory)/emulatorcert.crt /usr/local/share/ca-certificates/
-            sudo update-ca-certificates
-            echo "##vso[task.setvariable variable=cosmosDbEndpoint]https://$ipAddress:8081"
-          - name: Clean Azure Cosmos DB emulator
-            run: |
-              if [ ! -z "$(cosmosDbContainerId)" ];
-              then
-                docker rm -f $(cosmosDbContainerId)
-                sudo rm -f /usr/local/share/ca-certificates/emulatorcert.crt
-              fi
-            if: always()
+      - name: Diagnostics
+        run: |
+          echo 'ContainerId = $(cosmosDbContainerId)'
+          docker logs $(cosmosDbContainerId)
+      - name: Prepare emulator
+        run: |
+          ipAddress=$(hostname -I | awk '{print $1}')
+          curl -k https://$ipAddress:8081/_explorer/emulator.pem > $(Agent.TempDirectory)/emulatorcert.crt
+          sudo cp $(Agent.TempDirectory)/emulatorcert.crt /usr/local/share/ca-certificates/
+          sudo update-ca-certificates
+          echo "##vso[task.setvariable variable=cosmosDbEndpoint]https://$ipAddress:8081"
+      - name: Clean Azure Cosmos DB emulator
+        run: |
+          if [ ! -z "$(cosmosDbContainerId)" ];
+          then
+            docker rm -f $(cosmosDbContainerId)
+            sudo rm -f /usr/local/share/ca-certificates/emulatorcert.crt
+          fi
+        if: always()
