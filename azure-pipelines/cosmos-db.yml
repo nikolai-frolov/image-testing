@@ -3,7 +3,7 @@ trigger: none
 
 pool:
   name: Azure Pipelines
-  vmImage: 'ubuntu-18.04'
+  vmImage: 'ubuntu-20.04'
 
 resources:
   containers:
