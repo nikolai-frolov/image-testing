@@ -33,10 +33,11 @@ jobs:
       pwsh: true
       targetType: inline
       script: |
+        docker --debug info
         $isStarted = $false
         $retriesCount = 10
-        while ($isStarted -eq $false -or $retriesCount -ne 0) {
-            $logs = (docker logs azure-cosmosdb-emulator)
+        while ($isStarted -eq $false -and $retriesCount -ne 0) {
+            $logs = (docker logs --timestamps --details azure-cosmosdb-emulator)
             if ($logs.Contains('Started')) {
                 Write-Output "Container $containerId started."
                 $isStarted = $true
