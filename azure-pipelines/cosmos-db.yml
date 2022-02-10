@@ -35,7 +35,7 @@ jobs:
       script: |
         $isStarted = $false
         $retriesCount = 10
-        while ($isStarted -eq $false -and $retriesCount -ne 0) {
+        while ($isStarted -eq $false -or $retriesCount -ne 0) {
             $logs = (docker logs azure-cosmosdb-emulator)
             if ($logs.Contains('Started')) {
                 Write-Output "Container $containerId started."
