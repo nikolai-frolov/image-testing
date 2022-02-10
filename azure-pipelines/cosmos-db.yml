@@ -34,7 +34,8 @@ jobs:
       targetType: inline
       script: |
         $isStarted = $false
-        while ($isStarted -eq $false) {
+        $retriesCount = 10
+        while ($isStarted -eq $false or $retriesCount -ne 0) {
             $logs = (docker logs azure-cosmosdb-emulator)
             if ($logs.Contains('Started')) {
                 Write-Output "Container $containerId started."
@@ -44,5 +45,6 @@ jobs:
             Write-Output "Waiting for container azure-cosmosdb-emulator to start"
             Write-Output ($logs | Out-String)
             Start-Sleep -Seconds 5
+            $retriesCount--
         }
         docker ps --all
