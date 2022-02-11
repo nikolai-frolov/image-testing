@@ -25,19 +25,17 @@ jobs:
           Start-Sleep -Seconds 10
           $retriesCount = 10
           while ($retriesCount -ne 0) {
-            if ((docker inspect -f '{{.State.Status}}' $containerId) -eq "running") {
+            $logs = (docker logs $containerId)
+            if ($logs[-1] -eq 'Started') {
               Write-Output "Container $containerId running."
               break
             }
-            if ((docker inspect -f '{{.State.Status}}' $containerId) -eq "exited") {
-              Write-Output "Container $containerId exited."
-              break
-            }
             Write-Output "Waiting for container $containerId to start"
-            Write-Output (docker logs $containerId | Out-String)
+            Write-Output ($logs | Out-String)
             Start-Sleep -Seconds 5
             $retriesCount--
           }
           Write-Output (docker logs $containerId | Out-String)
           docker ps --all
+          docker inspect $containerId
           netstat -tulpn | grep LISTEN
