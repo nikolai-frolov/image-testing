@@ -19,4 +19,19 @@ jobs:
         run: |
           $containerId = (docker create -p 8081:8081 -p 10251:10251 -p 10252:10252 -p 10253:10253 -p 10254:10254 -m 3g --cpus=2.0 -e AZURE_COSMOS_EMULATOR_PARTITION_COUNT=10 -e AZURE_COSMOS_EMULATOR_ENABLE_DATA_PERSISTENCE=false -e AZURE_COSMOS_EMULATOR_IP_ADDRESS_OVERRIDE=127.0.0.1 mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator)
           docker start $containerId
+          Start-Sleep -Seconds 10
+          $isStarted = $false
+          $retriesCount = 10
+          while ($isStarted -eq $false -and $retriesCount -ne 0) {
+              $logs = (docker logs $containerId)
+              if ($logs.Contains('Started')) {
+                  Write-Output "Container $containerId started."
+                  $isStarted = $true
+                  break;
+              }
+              Write-Output "Waiting for container $containerId to start"
+              Write-Output ($logs | Out-String)
+              Start-Sleep -Seconds 5
+              $retriesCount--
+          }
           docker ps --all
