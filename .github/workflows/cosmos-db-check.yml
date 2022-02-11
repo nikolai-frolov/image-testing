@@ -19,18 +19,17 @@ jobs:
         run: |
           netstat -tulpn | grep LISTEN
           Write-Output "Container creation..."
-          $containerId = (docker create -p 8081:8081 -p 10251:10251 -p 10252:10252 -p 10253:10253 -p 10254:10254 -m 3g --cpus=2.0 --name=test-linux-emulator busybox)
+          $containerId = (docker create -p 8081:8081 -p 10251:10251 -p 10252:10252 -p 10253:10253 -p 10254:10254 -m 3g --cpus=2.0 busybox)
           Write-Output "Container starting..."
           docker start $containerId
           Start-Sleep -Seconds 10
           $retriesCount = 10
           while ($isStarted -eq $false -and $retriesCount -ne 0) {
-            $status = (docker ps -a --filter "NAMES==test-linux-emulator").STATUS
-            if ($status.Contains('Up')) {
-              Write-Output "Container $containerId started."
+            if ((docker inspect -f '{{.State.Status}}' $containerId) -eq "running") {
+              Write-Output "Container $containerId running."
               break
             }
-            if ($status.Contains('Exited')) {
+            if ((docker inspect -f '{{.State.Status}}' $containerId) -eq "exited") {
               Write-Output "Container $containerId exited."
               break
             }
@@ -39,5 +38,6 @@ jobs:
             Start-Sleep -Seconds 5
             $retriesCount--
           }
+          Write-Output (docker logs $containerId | Out-String)
           docker ps --all
           netstat -tulpn | grep LISTEN
