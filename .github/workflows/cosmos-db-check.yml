@@ -17,25 +17,31 @@ jobs:
     steps:
       - name: Start Azure Cosmos DB emulator
         run: |
+          Write-Output "Ports in use before container creation:"
           netstat -tulpn | grep LISTEN
+
           Write-Output "Container creation..."
-          $containerId = (docker create -p 8081:8081 -p 10251:10251 -p 10252:10252 -p 10253:10253 -p 10254:10254 -m 3g --cpus=2.0 mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator)
+          $containerId = (docker create -p 8081:8081 -p 10251:10251 -p 10252:10252 -p 10253:10253 -p 10254:10254 --cpus=2.0 mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator)
+
           Write-Output "Container starting..."
           docker start $containerId
           Start-Sleep -Seconds 10
-          $retriesCount = 10
+          $retriesCount = 5
           while ($retriesCount -ne 0) {
             $logs = (docker logs $containerId)
+            Write-Output ($logs | Out-String)
             if ($logs[-1] -eq 'Started') {
-              Write-Output "Container $containerId running."
+              Write-Output "Container $containerId started."
               break
             }
-            Write-Output "Waiting for container $containerId to start"
-            Write-Output ($logs | Out-String)
+            Write-Output "Waiting for container $containerId to start..."
             Start-Sleep -Seconds 5
             $retriesCount--
           }
-          Write-Output (docker logs $containerId | Out-String)
+
           docker ps --all
+
           docker inspect $containerId
+
+          Write-Output "Ports in use after container creation:"
           netstat -tulpn | grep LISTEN
