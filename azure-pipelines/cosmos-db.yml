@@ -4,10 +4,27 @@ pool:
   name: Azure Pipelines
   vmImage: 'ubuntu-20.04'
 
+resources:
+  containers:
+  - container: azure-cosmosdb-emulator
+    image: mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator
+    ports:
+    - "8081:8081"
+    - "10251:10251"
+    - "10252:10252"
+    - "10253:10253"
+    - "10254:10254"
+    options: --name azure-cosmosdb-emulator -m 3g --cpus=2.0 -e AZURE_COSMOS_EMULATOR_PARTITION_COUNT=20 -e AZURE_COSMOS_EMULATOR_ENABLE_DATA_PERSISTENCE=false -e AZURE_COSMOS_EMULATOR_IP_ADDRESS_OVERRIDE=127.0.0.1
+
 jobs:
 - job: Job
   displayName: 'Job'
+
+  services:
+    azure-cosmosdb-emulator: azure-cosmosdb-emulator
+
   steps:
+
   - task: PowerShell@2
     name: startCosmosDb
     displayName: 'Wait for Cosmos'
@@ -15,7 +32,18 @@ jobs:
       pwsh: true
       targetType: inline
       script: |
-        $containerId = (docker create -p 8081:8081 -p 10251:10251 -p 10252:10252 -p 10253:10253 -p 10254:10254 -m 3g --cpus=2.0 -e AZURE_COSMOS_EMULATOR_PARTITION_COUNT=10 -e AZURE_COSMOS_EMULATOR_ENABLE_DATA_PERSISTENCE=false -e AZURE_COSMOS_EMULATOR_IP_ADDRESS_OVERRIDE=127.0.0.1 mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator)
-        docker start $containerId
-        docker logs --timestamps --details $containerId
+        $isStarted = $false
+        $retriesCount = 10
+        while ($isStarted -eq $false -and $retriesCount -ne 0) {
+            $logs = (docker logs azure-cosmosdb-emulator)
+            if ($logs.Contains('Started')) {
+                Write-Output "Container $containerId started."
+                $isStarted = $true
+                break;
+            }
+            Write-Output "Waiting for container azure-cosmosdb-emulator to start"
+            Write-Output ($logs | Out-String)
+            Start-Sleep -Seconds 5
+            $retriesCount--
+        }
         docker ps --all
