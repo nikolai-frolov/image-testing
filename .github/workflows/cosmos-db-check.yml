@@ -24,7 +24,7 @@ jobs:
           docker start $containerId
           Start-Sleep -Seconds 10
           $retriesCount = 10
-          while ($isStarted -eq $false -and $retriesCount -ne 0) {
+          while ($retriesCount -ne 0) {
             if ((docker inspect -f '{{.State.Status}}' $containerId) -eq "running") {
               Write-Output "Container $containerId running."
               break
