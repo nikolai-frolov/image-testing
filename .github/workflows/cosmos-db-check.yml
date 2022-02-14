@@ -17,6 +17,12 @@ jobs:
     steps:
       - name: Start Azure Cosmos DB emulator
         run: |
+          Write-Output "lscpu output:"
+          lscpu
+
+          Write-Output "/proc/cpuinfo content:"
+          grep /proc/cpuinfo
+
           Write-Output "Ports in use before container creation:"
           netstat -tulpn | grep LISTEN
 
